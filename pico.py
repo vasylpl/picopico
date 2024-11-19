@@ -2,26 +2,30 @@ from machine import Pin
 from dht import DHT11
 import time
 
-# Nastavení DHT11 na pinu GP0
 sensor = DHT11(Pin(0))
 
-# Hlavní smyčka
+led1 = Pin(1, Pin.OUT)  # LED pro 21 °C
+led2 = Pin(2, Pin.OUT)  # LED pro 22 °C
+led3 = Pin(3, Pin.OUT)  # LED pro 23 °C
+led4 = Pin(4, Pin.OUT)  # LED pro 24 °C
+
+
 while True:
     try:
-        # Čtení hodnot z DHT11
+        
         sensor.measure()
         
-        # Získání teploty a vlhkosti
-        temperature = sensor.temperature()  # Teplota v °C
-        humidity = sensor.humidity()        # Vlhkost v %
+        temperature = sensor.temperature()  
 
-        # Výpis naměřených hodnot
         print("++++++++++++++++")
         print("Teplota: {}°C".format(temperature))
-        print("Vlhkost: {}%".format(humidity))
+        
+        led1.value(1 if temperature >= 21 else 0)
+        led2.value(1 if temperature >= 22 else 0)
+        led3.value(1 if temperature >= 23 else 0)
+        led4.value(1 if temperature >= 24 else 0)
         
     except OSError as e:
         print("Chyba při čtení ze senzoru:", e)
     
-    # Čekání mezi měřeními (DHT11 vyžaduje pauzu minimálně 2 sekundy)
-    time.sleep(0.1)
+    time.sleep(2)
